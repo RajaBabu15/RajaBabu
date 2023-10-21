@@ -7,7 +7,11 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT;
 
-app.use('/',express.static('dist'));
+app.get("/", (req, res) =>{
+  app.use('/',express.static('dist'));
+  res.send("Hi there, I'm running this Server")
+});
+
 
 app.get("/api/jokes", (req, res) => {
   res.send([
