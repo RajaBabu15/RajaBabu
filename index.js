@@ -3,38 +3,25 @@ const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
+const cors = require("cors");
 const { Console } = require("console");
 
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(cors(
+  {
+    origin: "https://raja-babu.vercel.app/",
+    credentials: true,
+    methods:["GET", "POST" ]
+  }
 
-function getFilesAndFolders(dirPath) {
-  let results = [];
-  const list = fs.readdirSync(dirPath);
+));
 
-  list.forEach(function(file) {
-    file = path.join(dirPath, file);
-    const stat = fs.statSync(file);
+app.use(express.json());
 
-    if (stat && stat.isDirectory()) {
-      /* Recurse into a subdirectory */
-      results = results.concat(getFilesAndFolders(file));
-    } else {
-      /* Is a file */
-      results.push(file);
-    }
-  });
-
-  return results;
-}
-
-app.get("/", (req, res) => {
-  const dirPath = path.join(__dirname);
-  const filesAndFolders = getFilesAndFolders(dirPath);
-  
-  res.send({filesAndFolders});
-});
+// app.use(express.urlencoded({ extended: true }));
+app.use('/', express.static(path.resolve(__dirname,'frontend','dist')));
 
 
 app.get("/api/jokes", (req, res) => {

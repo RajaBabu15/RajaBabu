@@ -6,10 +6,11 @@ import axios from "axios";
 
 function App() {
   const [jokes, setJokes] = useState([]);
+  axios.defaults.withCredentials=true;
 
   useEffect(() => {
     axios
-      .get("/api/jokes")
+      .get("https://raja-babu.vercel.app/api/jokes")
       .then((res) => {
         setJokes(res.data);
       })
