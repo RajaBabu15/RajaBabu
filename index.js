@@ -10,7 +10,7 @@ const PORT = process.env.PORT;
 // });
 
 
-app.use(express.static('frontend/dist'))
+app.use("/", express.static(path.join(__dirname, "../dist")));
 
 app.get("/api/jokes", (req, res) => {
   res.send([
