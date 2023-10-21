@@ -29,7 +29,7 @@ function getFilesAndFolders(dirPath) {
 }
 
 app.get("/", (req, res) => {
-  const dirPath = path.join(__dirname,'frontend/dist/');
+  const dirPath = path.join(__dirname);
   const filesAndFolders = getFilesAndFolders(dirPath);
   
   res.send({filesAndFolders});
