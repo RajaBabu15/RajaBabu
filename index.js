@@ -25,6 +25,7 @@ app.use('/', express.static(path.resolve(__dirname,'frontend','dist')));
 
 
 app.get("/api/jokes", (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://raja-babu-93mi.vercel.app/');
   res.send([
     {
       id: 1,
