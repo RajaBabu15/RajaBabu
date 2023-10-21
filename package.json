@@ -1,0 +1,29 @@
+{
+  "name": "rajababu",
+  "version": "1.0.0",
+  "description": "A WebCore to deploy the Various ML model from the author@Raja_Babu",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RajaBabu15/RajaBabu.git"
+  },
+  "keywords": [
+    "Node",
+    "AI",
+    "ML",
+    "vite"
+  ],
+  "author": "Raja Babu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RajaBabu15/RajaBabu/issues"
+  },
+  "homepage": "https://github.com/RajaBabu15/RajaBabu#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2"
+  }
+}
