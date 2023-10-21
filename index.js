@@ -2,29 +2,12 @@
 const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
 const path = require("path");
-const fs = require('fs');
 
 
 const app = express();
 const PORT = process.env.PORT;
 
-app.get("/", (req, res) => {
-  const dirPath = path.join(__dirname);
-  
-  fs.readdir(dirPath, (err, files) => {
-    if(err) {
-      console.error(`Error reading directory: ${err}`);
-      res.status(500).send({error: 'Error reading directory'});
-    } else {
-      const filePaths = files.map(file => path.join(dirPath, file));
-      res.send({files: filePaths});
-    }
-  });
-});
-
-
-
-// app.use('/',express.static('frontend/dist'));
+app.use('/',express.static('dist'));
 
 app.get("/api/jokes", (req, res) => {
   res.send([
@@ -32,7 +15,7 @@ app.get("/api/jokes", (req, res) => {
       id: 1,
       title: "Joke 1",
       content:
-        "Why don’t pirates take a showerr before they walk the plank? They just wash up on shore.",
+        "Why don’t pirates take a shower before they walk the plank? They just wash up on shore.",
     },
     {
       id: 2,
