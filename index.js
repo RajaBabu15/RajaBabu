@@ -18,3 +18,5 @@ app.get('/api/sayHello',(req,res)=>{
 app.listen(PORT,()=>{
     console.log(`Server is listening at the ${PORT}`)
 })
+
+module.exports = app;
