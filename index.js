@@ -3,14 +3,37 @@ const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
 const path = require("path");
 const fs = require("fs");
+const { Console } = require("console");
 
 const app = express();
 const PORT = process.env.PORT;
 
-app.get("/", (req, res) =>{
-  app.use('/',express.static('dist'));
 
-  res.json({"hehllo":"Hi there, I'm running this Server","path":fs.readdirSync(__dirname)});
+function getFilesAndFolders(dirPath) {
+  let results = [];
+  const list = fs.readdirSync(dirPath);
+
+  list.forEach(function(file) {
+    file = path.join(dirPath, file);
+    const stat = fs.statSync(file);
+
+    if (stat && stat.isDirectory()) {
+      /* Recurse into a subdirectory */
+      results = results.concat(getFilesAndFolders(file));
+    } else {
+      /* Is a file */
+      results.push(file);
+    }
+  });
+
+  return results;
+}
+
+app.get("/", (req, res) => {
+  const dirPath = path.join(__dirname);
+  const filesAndFolders = getFilesAndFolders(dirPath);
+  
+  res.send({filesAndFolders});
 });
 
 
@@ -49,8 +72,8 @@ app.get("/api/jokes", (req, res) => {
   ]);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is listening at the ${PORT}`);
-});
+app.listen(PORT, function () {
+	console.log(`server start successfully on ${PORT}`)
+})
 
 module.exports = app;
