@@ -8,31 +8,18 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT;
 
-function getFilesAndFolders(dirPath) {
-  let results = [];
-  const list = fs.readdirSync(dirPath);
-
-  list.forEach(function(file) {
-    file = path.join(dirPath, file);
-    const stat = fs.statSync(file);
-
-    if (stat && stat.isDirectory()) {
-      /* Recurse into a subdirectory */
-      results = results.concat(getFilesAndFolders(file));
-    } else {
-      /* Is a file */
-      results.push(file);
-    }
-  });
-
-  return results;
-}
-
 app.get("/", (req, res) => {
   const dirPath = path.join(__dirname);
-  const filesAndFolders = getFilesAndFolders(dirPath);
   
-  res.send({filesAndFolders});
+  fs.readdir(dirPath, (err, files) => {
+    if(err) {
+      console.error(`Error reading directory: ${err}`);
+      res.status(500).send({error: 'Error reading directory'});
+    } else {
+      const filePaths = files.map(file => path.join(dirPath, file));
+      res.send({files: filePaths});
+    }
+  });
 });
 
 
