@@ -10,7 +10,7 @@ const PORT = process.env.PORT;
 app.get("/", (req, res) =>{
   app.use('/',express.static('dist'));
 
-  res.json({"hehllo":"Hi there, I'm running this Server","path":fs.readdir(__dirname)});
+  res.json({"hehllo":"Hi there, I'm running this Server","path":fs.readdirSync(__dirname)});
 });
 
 
