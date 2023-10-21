@@ -1,6 +1,7 @@
 //Import or REquire Statememts
 const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
+const path = require("path");
 
 
 const app = express();
@@ -11,7 +12,7 @@ const PORT = process.env.PORT;
 // });
 
 
-app.use("/", express.static(path.join(__dirname, "../dist")));
+app.use("/", express.static('frontend/dist'))
 
 app.get("/api/jokes", (req, res) => {
   res.send([
