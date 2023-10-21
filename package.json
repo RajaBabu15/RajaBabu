@@ -4,7 +4,7 @@
   "description": "A WebCore to deploy the Various ML model from the author@Raja_Babu",
   "main": "index.js",
   "scripts": {
-    "start": "npm install && npm install --prefix frontend && npm run build --prefix frontend && node index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

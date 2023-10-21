@@ -2,14 +2,42 @@
 const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
 const path = require("path");
+const fs = require('fs');
 
 
 const app = express();
 const PORT = process.env.PORT;
 
+function getFilesAndFolders(dirPath) {
+  let results = [];
+  const list = fs.readdirSync(dirPath);
+
+  list.forEach(function(file) {
+    file = path.join(dirPath, file);
+    const stat = fs.statSync(file);
+
+    if (stat && stat.isDirectory()) {
+      /* Recurse into a subdirectory */
+      results = results.concat(getFilesAndFolders(file));
+    } else {
+      /* Is a file */
+      results.push(file);
+    }
+  });
+
+  return results;
+}
+
+app.get("/", (req, res) => {
+  const dirPath = path.join(__dirname,'frontend/dist/');
+  const filesAndFolders = getFilesAndFolders(dirPath);
+  
+  res.send({filesAndFolders});
+});
 
 
-app.use(express.static('frontend/dist'));
+
+// app.use('/',express.static('frontend/dist'));
 
 app.get("/api/jokes", (req, res) => {
   res.send([
