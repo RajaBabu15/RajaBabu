@@ -2,14 +2,15 @@
 const express = require("express"); //commonJS module import method
 const dotenv_config = require("dotenv").config();
 const path = require("path");
-
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT;
 
 app.get("/", (req, res) =>{
   app.use('/',express.static('dist'));
-  res.send("Hi there, I'm running this Server")
+
+  res.json({"hehllo":"Hi there, I'm running this Server","path":fs.readdir(__dirname)});
 });
 
 
