@@ -11,7 +11,7 @@ const PORT = process.env.PORT;
 
 app.use(cors(
   {
-    origin: "https://raja-babu.vercel.app/",
+    origin: "https://raja-babu-93mi.vercel.app/",
     credentials: true,
     methods:["GET", "POST" ]
   }

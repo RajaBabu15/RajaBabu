@@ -12,6 +12,7 @@ function App() {
     axios
       .get("https://raja-babu.vercel.app/api/jokes")
       .then((res) => {
+        console.log(res.data);
         setJokes(res.data);
       })
       .catch((err) => {
