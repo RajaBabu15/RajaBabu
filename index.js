@@ -7,9 +7,6 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT;
 
-app.get("/", (req, res) => {
-  res.send("Hello You are Welcome to Basic Backend Server");
-});
 
 
 app.use(express.static('frontend/dist'));
