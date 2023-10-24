@@ -5,8 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'cursive': ['Pinyon Script', 'sans-serif'],
+      },
+    },
   },
+  variants: {},
   plugins: [],
 }
 

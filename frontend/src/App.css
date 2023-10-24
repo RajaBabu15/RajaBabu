@@ -1,7 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans&family=Pinyon+Script&display=swap');
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 

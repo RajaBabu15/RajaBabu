@@ -1,23 +1,15 @@
-import React from "react";
+import React from 'react';
+import useTypewriter from 'react-typewriter-hook';
+import 'tailwindcss/tailwind.css';
 
 const Home = () => {
+  const text = useTypewriter('Hi, Welcome to my website', 30);
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-purple-600">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            Welcome to your new React app!
-          </h2>
-          <p className="mt-4 text-lg text-white">
-            This is a great place to start building your next web application.
-          </p>
-          <a
-            href="https://tailwindcss.com/"
-            className="mt-8 inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-          >
-            Learn more about Tailwind CSS
-          </a>
-        </div>
+    <div className="flex h-screen bg-gradient-to-r to-blue-500 relative">
+      <div className="w-1/2 bg-gradient-to-r to-green-500"></div>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="bg-gradient-to-r from-pink-200 rounded-full w-64 h-64"></div>
+        <h1 className="absolute text-8xl font-light text-light-blue-500 font-cursive">{text}</h1>
       </div>
     </div>
   );
