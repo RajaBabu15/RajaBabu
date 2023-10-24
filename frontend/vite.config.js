@@ -8,5 +8,9 @@ export default defineConfig({
       '/api': 'http://localhost:3000',
     }
   },
+  esbuild: {
+    loader: "jsx",
+    include: /src\/.*\.jsx?$/,
+  },  
   plugins: [react()],
 })

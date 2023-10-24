@@ -1,38 +1,32 @@
-import { useState, useEffect } from "react";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import axios from "axios";
+
+import Home from "./components/Home";
+import Contact from "./components/Contact";
+import About from "./components/About";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Predict from "./components/Predict";
+import Navbar from "./components/Navbar";
+import Errorpage from "./components/Errorpage";
 
 function App() {
-  const [jokes, setJokes] = useState([]);
-  axios.defaults.withCredentials=true;
-
-  useEffect(() => {
-    axios
-      .get("https://raja-babu.vercel.app/api/jokes")
-      .then((res) => {
-        console.log(res.data);
-        setJokes(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-
   return (
-    <>
-      <div>
-        <h1>Hello</h1>
-        <p>Jokes : {jokes.length}</p>
-        {jokes.map((joke, index) =>  (
-          <div key={joke.id}>
-            <h3>{joke.title}</h3>
-            <p>{joke.content}</p>
-          </div>
-        ))}
-      </div>
-    </>
+    <Router>
+      <Navbar/>
+      <Routes>
+        <Route path ='/' element={<Home/>}/>
+        <Route path ='/contact' element={<Contact/>}/>
+        <Route path ='/about' element={<About/>}/>
+        <Route path ='/login' element={<Login/>}/>
+        <Route path ='/signup' element={<Signup/>}/>
+        <Route path ='/predict' element={<Predict/>}/>
+        <Route path ='*' element={<Errorpage/>}/>
+      </Routes>
+    </Router>
   );
 }
 
