@@ -1,37 +1,46 @@
-import { useState } from "react";
+import { observer } from "mobx-react";
+import formDataStore from "./formStoreData";
+import ProgressBar from 'react-progressbar';
 
-function Predict() {
-  const [step, setStep] = useState(1);
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [gender, setGender] = useState("");
-  const [country, setCountry] = useState("");
-  const [state, setState] = useState("");
-  const [self_employed, setSelfEmployed] = useState("");
-  const [family_history, setFamilyHistory] = useState("");
-  const [work_interfere, setWorkInterfere] = useState("");
-  const [no_employees, setNoEmployees] = useState("");
-  const [remote_work, setRemoteWork] = useState("");
-  const [tech_company, setTechCompany] = useState("");
-  const [benefits, setBenefits] = useState("");
-  const [care_options, setCareOptions] = useState("");
-  const [wellness_program, setWellnessProgram] = useState("");
-  const [seek_help, setSeekHelp] = useState("");
-  const [anonymity, setAnonymity] = useState("");
-  const [leave, setLeave] = useState("");
-  const [mental_health_consequence, setMentalHealthConsequence] =    useState("");
-  const [phys_health_consequence, setPhysHealthConsequence] = useState("");
-  const [coworkers, setCoworkers] = useState("");
-  const [supervisor, setSupervisor] = useState("");
-  const [mental_health_interview, setMentalHealthInterview] = useState("");
-  const [phys_health_interview, setPhysHealthInterview] = useState("");
-  const [mental_vs_physical, setMentalVsPhysical] = useState("");
-  const [obs_consequence, setObsConsequence] = useState("");
+const Predict = observer(() => {
+  const {
+    step,
+    name,
+    age,
+    gender,
+    country,
+    state,
+    self_employed,
+    family_history,
+    work_interfere,
+    no_employees,
+    remote_work,
+    tech_company,
+    benefits,
+    care_options,
+    wellness_program,
+    seek_help,
+    anonymity,
+    leave,
+    mental_health_consequence,
+    phys_health_consequence,
+    coworkers,
+    supervisor,
+    mental_health_interview,
+    phys_health_interview,
+    mental_vs_physical,
+    obs_consequence,
+  } = formDataStore;
+
+  const handleChange = (event) => {
+    formDataStore.setField(event.target.name, event.target.value);
+  };
 
   const nextStep = () => {
     if (
+      step === 0 ||
       (step === 1 && name !== "") ||
-      (step === 2 && gender !== 0) ||
+      (step === 2 && gender !== "") ||
       (step === 3 && age !== "") ||
       (step === 4 && country !== "") ||
       (step === 5 && state !== "") ||
@@ -56,80 +65,89 @@ function Predict() {
       (step === 24 && mental_vs_physical !== "") ||
       (step === 25 && obs_consequence !== "")
     ) {
-      setStep(step + 1);
+      formDataStore.setField("step", step + 1);
     } else {
       alert("Please fill in the field before proceeding.");
     }
   };
 
   const prevStep = () => {
-    setStep(step - 1);
+    formDataStore.setField("step", step - 1);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(JSON.stringify({
-      "Name": name,
-      "Age": age,
-      "Gender": gender,
-      "Country": country,
-      "State": state,
-      "Self Employed": self_employed,
-      "Family History": family_history,
-      "Work Interfere": work_interfere,
-      "No Employees": no_employees,
-      "Remote Work": remote_work,
-      "Tech Company": tech_company,
-      "Benefits": benefits,
-      "Care Options": care_options,
-      "Wellness Program": wellness_program,
-      "Seek Help": seek_help,
-      "Anonymity": anonymity,
-      "Leave": leave,
-      "Mental Health Consequence": mental_health_consequence,
-      "Physical Health Consequence": phys_health_consequence,
-      "Coworkers": coworkers,
-      "Supervisor": supervisor,
-      "Mental Health Interview": mental_health_interview,
-      "Physical Health Interview": phys_health_interview,
-      "Mental vs Physical": mental_vs_physical,
-      "Obs Consequence": obs_consequence
-    }, null, 2));
-
-    alert({
-      "Name": name,
-      "Age": age,
-      "Gender": gender,
-      "Country": country,
-      "State": state,
-      "Self Employed": self_employed,
-      "Family History": family_history,
-      "Work Interfere": work_interfere,
-      "No Employees": no_employees,
-      "Remote Work": remote_work,
-      "Tech Company": tech_company,
-      "Benefits": benefits,
-      "Care Options": care_options,
-      "Wellness Program": wellness_program,
-      "Seek Help": seek_help,
-      "Anonymity": anonymity,
-      "Leave": leave,
-      "Mental Health Consequence": mental_health_consequence,
-      "Physical Health Consequence": phys_health_consequence,
-      "Coworkers": coworkers,
-      "Supervisor": supervisor,
-      "Mental Health Interview": mental_health_interview,
-      "Physical Health Interview": phys_health_interview,
-      "Mental vs Physical": mental_vs_physical,
-      "Obs Consequence": obs_consequence
-    }    )
-    
-    
+    console.log(JSON.stringify(formDataStore, null, 2));
+    alert(formDataStore);
   };
+  const progress = (step / 25) * 100;
 
   return (
     <div className="flex items-center justify-center h-screen">
       <form onSubmit={handleSubmit} className="w-1/2 shadow-xl rounded-md p-8">
+
+      <ProgressBar completed={progress} />
+        {step === 0 && (
+          <div>
+            <h2 className="underline text-2xl font-medium text-gray-700 mb-2">
+              🧠 <span className="text-blue-500">Mental Health Prediction</span>
+            </h2>
+            <p>
+              Welcome to the{" "}
+              <span className="font-bold text-blue-500">
+                Mental Health Prediction
+              </span>{" "}
+              page. This page uses a predictive model to estimate your mental
+              health status based on various parameters. The parameters include
+              demographic information, work environment, and personal
+              perceptions about mental health. Please provide accurate responses
+              to ensure the best prediction.📝
+            </p>
+            <p>
+              The prediction model considers factors such as age, gender,
+              country of residence, employment status, family history of mental
+              health issues, and more. It also considers your work environment,
+              including the number of employees in your organization, whether
+              you work remotely or in a tech company, and the mental health
+              policies and resources provided by your employer.🏢
+            </p>
+            <p>
+              The model also considers your perceptions about discussing mental
+              health issues at work and during job interviews, as well as your
+              willingness to discuss these issues with coworkers and
+              supervisors.💼
+            </p>
+            <p className="font-bold text-red-500">
+              By analyzing these factors, the model can predict your mental
+              health status. This prediction is not a diagnosis and should not
+              replace professional medical advice. Mental health is a serious
+              issue that requires attention and care. If you're feeling unwell,
+              please seek help from a healthcare professional.🩺💕
+            </p>
+            <p className="text-lg font-semibold">
+              Mental health is a serious issue, and seeking help is important if
+              you're struggling. Here are some resources that can help:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>
+                <a
+                  href="https://www.mentalhealth.gov/"
+                  className="text-blue-500 underline hover:text-blue-700"
+                >
+                  MentalHealth.gov
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.nami.org/"
+                  className="text-blue-500 underline hover:text-blue-700"
+                >
+                  National Alliance on Mental Illness (NAMI)
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
 
         {step === 1 && (
           <div>
@@ -143,7 +161,9 @@ function Predict() {
             <input
               type="text"
               id="name"
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              value={formDataStore.name}
+              onChange={handleChange}
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
             />
           </div>
@@ -167,7 +187,8 @@ function Predict() {
                 id="male"
                 name="gender"
                 value="Male"
-                onChange={(e) => setGender(e.target.value)}
+                checked={formDataStore.gender === "Male"}
+                onChange={handleChange}
               />
               <label htmlFor="male">Male</label>
               <br />
@@ -176,7 +197,8 @@ function Predict() {
                 id="female"
                 name="gender"
                 value="Female"
-                onChange={(e) => setGender(e.target.value)}
+                checked={formDataStore.gender === "Female"}
+                onChange={handleChange}
               />
               <label htmlFor="female">Female</label>
               <br />
@@ -190,15 +212,17 @@ function Predict() {
               htmlFor="age"
               className="block text-2xl font-medium text-gray-700 mb-2"
             >
-              Age: {age}
+              Age: {formDataStore.age}
             </label>
             <p>Please Select Your Age 👇</p>
             <input
               type="range"
               id="age"
+              name="age"
               min="1"
               max="100"
-              onChange={(e) => setAge(e.target.value)}
+              value={formDataStore.age}
+              onChange={handleChange}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
             />
           </div>
@@ -215,7 +239,9 @@ function Predict() {
             <p>Select Country</p>
             <select
               id="country"
-              onChange={(e) => setCountry(e.target.value)}
+              name="country"
+              value={formDataStore.country}
+              onChange={handleChange}
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
             >
               <option value="">Select...</option>
@@ -285,7 +311,9 @@ function Predict() {
             <input
               type="text"
               id="state"
-              onChange={(e) => setState(e.target.value)}
+              name="state"
+              value={formDataStore.state}
+              onChange={handleChange}
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
             />
           </div>
@@ -309,7 +337,8 @@ function Predict() {
                 id="yes"
                 name="self_employed"
                 value="Yes"
-                onChange={(e) => setSelfEmployed(e.target.value)}
+                checked={formDataStore.self_employed === "Yes"}
+                onChange={handleChange}
               />
               <label htmlFor="yes">Yes</label>
               <br />
@@ -318,7 +347,8 @@ function Predict() {
                 id="no"
                 name="self_employed"
                 value="No"
-                onChange={(e) => setSelfEmployed(e.target.value)}
+                checked={formDataStore.self_employed === "No"}
+                onChange={handleChange}
               />
               <label htmlFor="no">No</label>
               <br />
@@ -332,9 +362,12 @@ function Predict() {
               htmlFor="family_history"
               className="block text-2xl font-medium text-gray-700 mb-2"
             >
-              Family History
+              Family History of Mental Health
             </label>
-            <p>Select Yes or No</p>
+            <p>
+              Does your family have a history of mental health issues? Please
+              select 'Yes' or 'No'.
+            </p>
             <div
               id="family_history"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
@@ -344,7 +377,8 @@ function Predict() {
                 id="yes"
                 name="family_history"
                 value="Yes"
-                onChange={(e) => setFamilyHistory(e.target.value)}
+                checked={formDataStore.family_history === "Yes"}
+                onChange={handleChange}
               />
               <label htmlFor="yes">Yes</label>
               <br />
@@ -353,7 +387,8 @@ function Predict() {
                 id="no"
                 name="family_history"
                 value="No"
-                onChange={(e) => setFamilyHistory(e.target.value)}
+                checked={formDataStore.family_history === "No"}
+                onChange={handleChange}
               />
               <label htmlFor="no">No</label>
               <br />
@@ -373,7 +408,9 @@ function Predict() {
             <select
               id="work_interfere"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setWorkInterfere(e.target.value)}
+              name="work_interfere"
+              value={formDataStore.work_interfere}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Often">Often</option>
@@ -389,13 +426,18 @@ function Predict() {
               htmlFor="no_employees"
               className="block text-2xl font-medium text-gray-700 mb-2"
             >
-              Number of Employees
+              Size of Your Workplace
             </label>
-            <p>Select number of employees</p>
+            <p>
+              How many employees are there in your current workplace? Please
+              select the appropriate range.
+            </p>
             <select
               id="no_employees"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setNoEmployees(e.target.value)}
+              name="no_employees"
+              value={formDataStore.no_employees}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="1-5">1-5</option>
@@ -416,7 +458,7 @@ function Predict() {
             >
               Remote Work
             </label>
-            <p>Select Yes or No</p>
+            <p>Do you work remotely? Please select 'Yes' or 'No'.</p>
             <div
               id="remote_work"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
@@ -426,7 +468,8 @@ function Predict() {
                 id="yes"
                 name="remote_work"
                 value="Yes"
-                onChange={(e) => setRemoteWork(e.target.value)}
+                checked={formDataStore.remote_work === "Yes"}
+                onChange={handleChange}
               />
               <label htmlFor="yes">Yes</label>
               <br />
@@ -435,7 +478,8 @@ function Predict() {
                 id="no"
                 name="remote_work"
                 value="No"
-                onChange={(e) => setRemoteWork(e.target.value)}
+                checked={formDataStore.remote_work === "No"}
+                onChange={handleChange}
               />
               <label htmlFor="no">No</label>
               <br />
@@ -451,17 +495,21 @@ function Predict() {
             >
               Tech Company
             </label>
-            <p>Select Yes or No</p>
+            <p>
+              Are you currently employed at a tech company? Please select 'Yes'
+              or 'No'.
+            </p>
             <div
               id="tech_company"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
             >
               <input
                 type="radio"
                 id="yes"
                 name="tech_company"
                 value="Yes"
-                onChange={(e) => setTechCompany(e.target.value)}
+                checked={formDataStore.tech_company === "Yes"}
+                onChange={handleChange}
               />
               <label htmlFor="yes"> Yes </label>
               <br />
@@ -470,7 +518,8 @@ function Predict() {
                 id="no"
                 name="tech_company"
                 value="No"
-                onChange={(e) => setTechCompany(e.target.value)}
+                checked={formDataStore.tech_company === "No"}
+                onChange={handleChange}
               />
               <label htmlFor="no"> No </label>
               <br />
@@ -490,7 +539,9 @@ function Predict() {
             <select
               id="benefits"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setBenefits(e.target.value)}
+              name="benefits"
+              value={formDataStore.benefits}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -514,8 +565,10 @@ function Predict() {
             </p>
             <select
               id="care_options"
-              className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setCareOptions(e.target.value)}
+              className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg" 
+              name="care_options"
+              value={formDataStore.care_options}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -536,8 +589,10 @@ function Predict() {
             <p>Select if the employer offers a wellness program</p>
             <select
               id="wellness_program"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setWellnessProgram(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="wellness_program"
+              value={formDataStore.wellness_program}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -561,8 +616,10 @@ function Predict() {
             </p>
             <select
               id="seek_help"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setSeekHelp(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="seek_help"
+              value={formDataStore.seek_help}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -586,8 +643,10 @@ function Predict() {
             </p>
             <select
               id="anonymity"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setAnonymity(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="anonymity"
+              value={formDataStore.anonymity}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -608,8 +667,10 @@ function Predict() {
             <p>Select how easy it is to take leave for mental health issues</p>
             <select
               id="leave"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setLeave(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="leave"
+              value={formDataStore.leave}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Very easy"> Very easy </option>{" "}
@@ -635,7 +696,9 @@ function Predict() {
             <select
               id="mental_health_consequence"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setMentalHealthConsequence(e.target.value)}
+              name="mental_health_consequence"
+              value={formDataStore.mental_health_consequence}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -660,7 +723,9 @@ function Predict() {
             <select
               id="phys_health_consequence"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setPhysHealthConsequence(e.target.value)}
+              name="phys_health_consequence"
+              value={formDataStore.phys_health_consequence}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -684,8 +749,10 @@ function Predict() {
             </p>
             <select
               id="coworkers"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setCoworkers(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="coworkers"
+              value={formDataStore.coworkers}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -709,8 +776,10 @@ function Predict() {
             </p>
             <select
               id="supervisor"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setSupervisor(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="supervisor"
+              value={formDataStore.supervisor}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -735,7 +804,9 @@ function Predict() {
             <select
               id="mental_health_interview"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setMentalHealthInterview(e.target.value)}
+              name="mental_health_interview"
+              value={formDataStore.mental_health_interview}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -760,7 +831,9 @@ function Predict() {
             <select
               id="phys_health_interview"
               className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
-              onChange={(e) => setPhysHealthInterview(e.target.value)}
+              name="phys_health_interview"
+              value={formDataStore.phys_health_interview}
+              onChange={handleChange}
             >
               <option value="">Select...</option>
               <option value="Yes">Yes</option>
@@ -784,8 +857,10 @@ function Predict() {
             </p>
             <select
               id="mental_vs_physical"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
-              onChange={(e) => setMentalVsPhysical(e.target.value)}
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              name="mental_vs_physical"
+              value={formDataStore.mental_vs_physical}
+              onChange={handleChange}
             >
               <option value=""> Select... </option>{" "}
               <option value="Yes"> Yes </option>{" "}
@@ -806,14 +881,15 @@ function Predict() {
             <p>Select Yes or No</p>
             <div
               id="obs_consequence"
-              className="block w-full px -4 py -2 rounded -md border -gray -300 shadow -sm focus:border -blue -500 focus:outline -none text -lg"
+              className="block w-full px -4 py -2 rounded -md shadow -sm focus:border -blue -500 focus:outline -none text -lg"
             >
               <input
                 type="radio"
                 id="yes"
                 name="obs_consequence"
                 value="Yes"
-                onChange={(e) => setObsConsequence(e.target.value)}
+                checked={formDataStore.obs_consequence === "Yes"}
+                onChange={handleChange}
               />
               <label htmlFor="yes"> Yes </label>
               <br />
@@ -822,7 +898,8 @@ function Predict() {
                 id="no"
                 name="obs_consequence"
                 value="No"
-                onChange={(e) => setObsConsequence(e.target.value)}
+                checked={formDataStore.obs_consequence === "No"}
+                onChange={handleChange}
               />
               <label htmlFor="no"> No </label>
               <br />
@@ -830,7 +907,7 @@ function Predict() {
           </div>
         )}
 
-        {step > 1 && (
+        {step > 0 && (
           <button
             type="button"
             onClick={prevStep}
@@ -854,9 +931,9 @@ function Predict() {
           <button
             type="submit"
             disabled={obs_consequence === ""}
-            className={`mt-8 px-4 py-2 text-white rounded hover:${obs_consequence !== '' ? 'bg-green-700' : 'bg-gray-600'} ${
-              obs_consequence !== "" ? "bg-green-600" : "bg-gray-600"
-            }`}
+            className={`mt-8 px-4 py-2 text-white rounded hover:${
+              obs_consequence !== "" ? "bg-green-700" : "bg-gray-600"
+            } ${obs_consequence !== "" ? "bg-green-600" : "bg-gray-600"}`}
           >
             Submit
           </button>
@@ -864,6 +941,6 @@ function Predict() {
       </form>
     </div>
   );
-}
+});
 
-export default Predict;
+export default Predict; 

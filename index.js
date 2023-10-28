@@ -10,8 +10,8 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT;
 
-require("./db/conn")
-app.use(require("./router/auth"))
+// require("./db/conn")
+// app.use(require("./router/auth"))
 app.use(require("./router/api/project"))
 
 
