@@ -1,6 +1,8 @@
 import { observer } from "mobx-react";
 import formDataStore from "./formStoreData";
-import ProgressBar from 'react-progressbar';
+import ProgressBar from "react-progressbar";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const Predict = observer(() => {
   const {
@@ -31,6 +33,9 @@ const Predict = observer(() => {
     mental_vs_physical,
     obs_consequence,
   } = formDataStore;
+
+  const [predictValue, setPredictValue] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
     formDataStore.setField(event.target.name, event.target.value);
@@ -75,18 +80,61 @@ const Predict = observer(() => {
     formDataStore.setField("step", step - 1);
   };
 
+  useEffect(() => {
+    if (step === 25) {
+      setIsLoading(true);
+      axios
+        .post("https://raja-babu.vercel.app/predict", {
+          step: step,
+          name: name,
+          age: age,
+          gender: gender,
+          country: country,
+          state: state,
+          self_employed: self_employed,
+          family_history: family_history,
+          work_interfere: work_interfere,
+          no_employees: no_employees,
+          remote_work: remote_work,
+          tech_company: tech_company,
+          benefits: benefits,
+          care_options: care_options,
+          wellness_program: wellness_program,
+          seek_help: seek_help,
+          anonymity: anonymity,
+          leave: leave,
+          mental_health_consequence: mental_health_consequence,
+          phys_health_consequence: phys_health_consequence,
+          coworkers: coworkers,
+          supervisor: supervisor,
+          mental_health_interview: mental_health_interview,
+          phys_health_interview: phys_health_interview,
+          mental_vs_physical: mental_vs_physical,
+          obs_consequence: obs_consequence,
+        })
+        .then((res) => {
+          setPredictValue(res.data); // Set the response data to predictValue state
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+        });
+    }
+  }, [step]);
+
   const handleSubmit = (event) => {
+    axios.defaults.withCredentials = true;
     event.preventDefault();
-    console.log(JSON.stringify(formDataStore, null, 2));
-    alert(formDataStore);
+    nextStep();
   };
-  const progress = (step / 25) * 100;
+
+  const progress = Math.min(Math.max((step / 25) * 100, 0), 100);
 
   return (
     <div className="flex items-center justify-center h-screen">
       <form onSubmit={handleSubmit} className="w-1/2 shadow-xl rounded-md p-8">
-
-      <ProgressBar completed={progress} />
+        <ProgressBar completed={progress} />
         {step === 0 && (
           <div>
             <h2 className="underline text-2xl font-medium text-gray-700 mb-2">
@@ -565,7 +613,7 @@ const Predict = observer(() => {
             </p>
             <select
               id="care_options"
-              className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg" 
+              className="block w-full px-4 py-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:outline-none text-lg"
               name="care_options"
               value={formDataStore.care_options}
               onChange={handleChange}
@@ -907,7 +955,91 @@ const Predict = observer(() => {
           </div>
         )}
 
-        {step > 0 && (
+        {step === 26 && (
+          <div>
+            <h2 className="text-2xl font-bold text-blue-600">
+              Prediction Result:
+            </h2>
+            {isLoading ? (
+              <p>Predicting Your Mental Health from the Machine Learning Model...</p>
+            ) : (
+              <div>
+                {predictValue.data[0] === "Yes" ? (
+                  <p className="text-lg italic text-red-800">
+                    Based on the information provided, it may be beneficial to
+                    seek professional help. Remember, it's okay to ask for help,
+                    and mental health professionals are there to support you.
+                  </p>
+                ) : (
+                  <p className="text-lg italic text-red-800">
+                    Based on the information provided, it seems like you're
+                    doing okay. However, if you ever feel overwhelmed, don't
+                    hesitate to seek professional help.
+                  </p>
+                )}
+                <h2 className="mt-8 text-2xl font-bold text-blue-600">
+                  Tips and Tricks for Improving Mental Health:
+                </h2>
+                <ul className="list-disc ml-5">
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">
+                      Regular Exercise:
+                    </span>{" "}
+                    Physical activity can have a huge impact on your mood as it
+                    produces endorphins which are natural mood lifters. 🏋️‍♀️🤸‍♀️
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">Balanced Diet:</span>{" "}
+                    Eating a healthy diet can influence how you feel. Try to
+                    incorporate plenty of fruits, vegetables, lean meats, and
+                    whole grains into your diet. 🥦🍎
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">Adequate Sleep:</span>{" "}
+                    Lack of sleep can contribute to feelings of anxiety and
+                    depression. Try to establish a regular sleep schedule. 🛌💤
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">Stay Connected:</span>{" "}
+                    Spend time with supportive friends and family. Don't
+                    hesitate to reach out when you need help. 👨‍👩‍👧‍👦📞
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">
+                      Mindfulness and Meditation:
+                    </span>{" "}
+                    These practices can help you stay grounded and can improve
+                    your mental well-being. 🧘‍♀️🌳
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">
+                      Limit Alcohol and Avoid Drugs:
+                    </span>{" "}
+                    These substances can exacerbate mental health issues and can
+                    make it harder for your body to recover. 🚭🍷
+                  </li>
+                  <li className="mt-2 text-lg text-gray-700">
+                    <span className="font-bold underline">
+                      Do What You Love:
+                    </span>{" "}
+                    Whether it's reading a book, listening to music, or
+                    gardening, spend some time each day doing activities that
+                    bring you joy. 📚🎵🌷
+                  </li>
+                </ul>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={prevStep}
+              className="mt-8 px-4 py-2 mx-4 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Back
+            </button>
+          </div>
+        )}
+
+        {step > 0 && step < 26 && (
           <button
             type="button"
             onClick={prevStep}
@@ -943,4 +1075,4 @@ const Predict = observer(() => {
   );
 });
 
-export default Predict; 
+export default Predict;
